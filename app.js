@@ -38,17 +38,16 @@ const app = http.createServer(async (request, response) => {
 
     // ROUTE: "/users" - POST
     else if (request.url === "/users" && request.method === "POST") {
-        const user = {
-            id: new Date().getTime(),
-            image: "https://share.cederdorff.com/images/petl.jpg",
-            mail: "tester@kea.dk",
-            name: "Tester User",
-            title: "Senior Tester"
-        };
-        // Læs fra JSON
+        // Læs body fra request
+        const requestBody = await getRequestData(request);
+        // Parse til JavaScript
+        const user = JSON.parse(requestBody);
+        // Tilføj dummy id
+        user.id = new Date().getTime();
+        // Læs alle users fra JSON
         const json = await fs.readFile("data/users.json");
         console.log(json);
-        // Parse til JavaScript
+        // Parse alle users til JavaScript
         const users = JSON.parse(json);
         console.log(users);
         // Tilføj "user" til "users"
@@ -77,8 +76,8 @@ app.listen(port, () => {
 async function getRequestData(request) {
     return new Promise((resolve, reject) => {
         let body = "";
-        req.on("data", chunk => (body += chunk));
-        req.on("end", () => resolve(body));
-        req.on("error", reject);
+        request.on("data", chunk => (body += chunk));
+        request.on("end", () => resolve(body));
+        request.on("error", reject);
     });
 }
