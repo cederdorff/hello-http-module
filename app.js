@@ -1,5 +1,5 @@
 // Importer det indbyggede Node.js 'http' module.
-import http from "node:http";
+import http from "http";
 import { users } from "./data/users.js";
 import { posts } from "./data/posts.js";
 
