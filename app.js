@@ -1,14 +1,17 @@
 // Importer det indbyggede Node.js 'http' module.
 import http from "node:http";
-import { users } from "./data/users.js";
-import { posts } from "./data/posts.js";
+import fs from "fs/promises";
 
 // Her opretter vi en HTTP-server ved at bruge 'createServer' funktionen.
 // Denne funktion tager en såkaldt 'callback' funktion, der bliver kaldt, når der anmodes om en side.
 
-const app = http.createServer((request, response) => {
+const app = http.createServer(async (request, response) => {
     // ROUTE: "/" - GET
     if (request.url === "/" && request.method === "GET") {
+        const folderPath = "./data";
+
+        console.log(await fs.readdir(folderPath));
+
         // Sæt statuskode og overskrift for responsen
         response.statusCode = 200;
         response.setHeader("Content-Type", "text/plain");
@@ -28,8 +31,37 @@ const app = http.createServer((request, response) => {
         // Sæt statuskode og overskrift for responsen
         response.statusCode = 200;
         response.setHeader("Content-Type", "application/json");
+        const json = await fs.readFile("data/posts.json");
         // Send JSON som response
-        response.end(JSON.stringify(posts));
+        response.end(json);
+    }
+
+    // ROUTE: "/users" - POST
+    else if (request.url === "/users" && request.method === "POST") {
+        const user = {
+            id: new Date().getTime(),
+            image: "https://share.cederdorff.com/images/petl.jpg",
+            mail: "tester@kea.dk",
+            name: "Tester User",
+            title: "Senior Tester"
+        };
+        // Læs fra JSON
+        const json = await fs.readFile("data/users.json");
+        console.log(json);
+        // Parse til JavaScript
+        const users = JSON.parse(json);
+        console.log(users);
+        // Tilføj "user" til "users"
+        users.push(user);
+        // Konverter users til JSON igen
+        const usersJSON = JSON.stringify(users);
+        // Skriv til JSON-fil
+        await fs.writeFile("data/users.json", usersJSON);
+        // sæt statuskode og header
+        response.statusCode = 200;
+        response.setHeader("Content-Type", "application/json");
+        // send users
+        response.end(usersJSON);
     }
 });
 
