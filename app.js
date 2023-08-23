@@ -73,3 +73,12 @@ app.listen(port, () => {
     // Når serveren er startet, viser vi en besked i terminalen.
     console.log(`Serveren kører på http://localhost:${port}`);
 });
+
+async function getRequestData(request) {
+    return new Promise((resolve, reject) => {
+        let body = "";
+        req.on("data", chunk => (body += chunk));
+        req.on("end", () => resolve(body));
+        req.on("error", reject);
+    });
+}
