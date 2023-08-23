@@ -1,5 +1,5 @@
 // Importer det indbyggede Node.js 'http' module.
-import http from "node:http";
+import http from "http";
 import fs from "fs/promises";
 
 // Her opretter vi en HTTP-server ved at bruge 'createServer' funktionen.
