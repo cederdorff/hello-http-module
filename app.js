@@ -23,8 +23,9 @@ const app = http.createServer(async (request, response) => {
         // Sæt statuskode og overskrift for responsen
         response.statusCode = 200;
         response.setHeader("Content-Type", "application/json");
+        const json = await fs.readFile("data/users.json");
         // Send JSON som response
-        response.end(JSON.stringify(users));
+        response.end(json);
     }
     // ROUTE: "/posts" - GET
     else if (request.url === "/posts" && request.method === "GET") {
