@@ -8,10 +8,6 @@ import fs from "fs/promises";
 const app = http.createServer(async (request, response) => {
     // ROUTE: "/" - GET
     if (request.url === "/" && request.method === "GET") {
-        const folderPath = "./data";
-
-        console.log(await fs.readdir(folderPath));
-
         // Sæt statuskode og overskrift for responsen
         response.statusCode = 200;
         response.setHeader("Content-Type", "text/plain");
